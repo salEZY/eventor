@@ -47,6 +47,7 @@ const Sort = () => {
       ctx.removeSortedData();
     }
   };
+
   return (
     <div className={classes.sortDiv}>
       <h4 className={classes.msg}>Sort events by:</h4>
@@ -66,7 +67,7 @@ const Sort = () => {
         value="Clear"
         color="secondary"
         className={classes.clearBtn}
-        onclick={ctx.removeSortedData}
+        onClick={ctx.removeSortedData}
       >
         Clear
       </Button>

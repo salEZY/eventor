@@ -38,6 +38,7 @@ function App() {
   const [data, setData] = useState([]);
   const [sortedData, setSortedData] = React.useState([]);
   const [isGrid, setIsGrid] = useState(false);
+  const [country, setCountry] = useState("");
   const classes = useStyles();
 
   const handleData = (data) => {
@@ -76,12 +77,24 @@ function App() {
     setSortedData([]);
   };
 
+  const handleCurrentCountry = (country) => {
+    setCountry(country);
+  };
+
+  const removeCountry = () => {
+    setData([]);
+    setCountry("");
+  };
+
   return (
     <AppContext.Provider
       value={{
         data: data,
         sortedData: sortedData,
         grid: isGrid,
+        country: country,
+        handleCurrentCountry: handleCurrentCountry,
+        removeCountry: removeCountry,
         enableGrid: enableGrid,
         enableList: enableList,
         handleData: handleData,

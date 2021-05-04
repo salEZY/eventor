@@ -1,12 +1,7 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Button,
-} from "@material-ui/core";
+import { FormGroup, FormControlLabel, Checkbox } from "@material-ui/core";
 import axios from "axios";
 import { AppContext } from "../util/app-context";
 
@@ -47,32 +42,59 @@ const useStyles = makeStyles({
 
 const Categories = () => {
   const ctx = React.useContext(AppContext);
-  const [country, setCountry] = React.useState("");
   const [categories, setCategories] = React.useState("");
+  const [check, setCheck] = React.useState([]);
   const classes = useStyles();
 
-  const handleCountry = (e) => {
-    setCountry(e.currentTarget.value);
+  React.useEffect(() => {
     axios
       .get(
-        `https://app.ticketmaster.eu/amplify/v2/categories?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${e.currentTarget.value}&lang=en-us`
+        `https://app.ticketmaster.eu/amplify/v2/categories?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us`
       )
       .then((data) => {
         setCategories(data.data.categories);
         ctx.handleData([]);
       });
-  };
+  }, [ctx.country]);
 
-  const handleCategories = (event, id) => {
-    if (event.target.checked) {
+  const handleCategories = (event) => {
+    const { value, checked } = event.target;
+
+    let checkArray = [];
+    let id;
+    if (checked) {
+      checkArray = [...check, value];
+      setCheck(checkArray);
+      if (check.length === 0) {
+        axios
+          .get(
+            `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us&category_ids=${value}&start=0&rows=20
+        `
+          )
+          .then((data) => ctx.handleData(data.data.events));
+      }
+      if (check.length > 0) {
+        id = checkArray.join("%2C");
+        axios
+          .get(
+            `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us&category_ids=${id}&start=0&rows=20
+        `
+          )
+          .then((data) => ctx.handleData(data.data.events));
+      }
+    } else {
+      setCheck(check.filter((id) => id !== value));
+      if (check.length === 1) {
+        ctx.removeData();
+        return;
+      }
+      checkArray = check.filter((chk) => chk !== value);
       axios
         .get(
-          `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${country}&lang=en-us&category_ids=${id}&sort_by=eventdate&start=0&rows=20
-    `
+          `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us&category_ids=${checkArray}&start=0&rows=20
+        `
         )
-        .then((data) => ctx.handleCategories(data.data.events));
-    } else if (!event.target.checked) {
-      ctx.removeCategories(ctx.data, id);
+        .then((data) => ctx.handleData(data.data.events));
     }
   };
 
@@ -80,40 +102,13 @@ const Categories = () => {
     <div className={classes.root}>
       <FormGroup className={classes.inputDiv}>
         <h3>Select Category</h3>
-        <div className={classes.btnDiv}>
-          <Button
-            className={classes.btn}
-            value="spain"
-            onClick={handleCountry}
-            variant="outlined"
-            color="primary"
-          >
-            Spain
-          </Button>
-          <Button
-            className={classes.btn}
-            value="germany"
-            onClick={handleCountry}
-            variant="outlined"
-            color="primary"
-          >
-            Germany
-          </Button>
-          <Button
-            className={classes.btn}
-            value="poland"
-            onClick={handleCountry}
-            variant="outlined"
-            color="primary"
-          >
-            Poland
-          </Button>
-        </div>
-        {!categories ? (
+        {!ctx.country ? (
           <p>Please select a country</p>
         ) : (
           <>
-            <h3>{country.charAt(0).toUpperCase() + country.slice(1)}</h3>
+            <h3>
+              {ctx.country.charAt(0).toUpperCase() + ctx.country.slice(1)}
+            </h3>
             <div className={classes.lbl}>
               {categories.map((category) => {
                 return (
@@ -121,10 +116,10 @@ const Categories = () => {
                     control={
                       <Checkbox
                         name={category.name}
-                        value={category.name}
+                        value={category.id}
                         color="primary"
                         className={classes.inputs}
-                        onClick={(e) => handleCategories(e, category.id)}
+                        onClick={(e) => handleCategories(e)}
                       />
                     }
                     label={category.name}

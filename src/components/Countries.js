@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -37,23 +37,17 @@ const useStyles = makeStyles({
 
 const Countries = () => {
   const ctx = React.useContext(AppContext);
-  const [country, setCountry] = useState("");
   const classes = useStyles();
 
   const handleChange = (e) => {
-    setCountry(e.target.value);
+    ctx.handleCurrentCountry(e.target.value);
     axios
       .get(
-        `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${e.target.value}&lang=en-us&sort_by=eventdate&start=0&rows=20`
+        `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${e.target.value}&lang=en-us&sort_by=eventdate&start=0&rows=40`
       )
       .then((userData) => {
         ctx.handleData(userData.data.events);
       });
-  };
-
-  const clearCountry = () => {
-    ctx.handleData([]);
-    setCountry("");
   };
 
   return (
@@ -62,7 +56,7 @@ const Countries = () => {
       <RadioGroup
         aria-label="category"
         name="category"
-        value={country}
+        value={ctx.country}
         onChange={handleChange}
         className={classes.buttons}
       >
@@ -85,7 +79,7 @@ const Countries = () => {
       <Button
         className={classes.clearBtn}
         value="Clear"
-        onClick={clearCountry}
+        onClick={ctx.removeCountry}
         variant="outlined"
         color="secondary"
       >
