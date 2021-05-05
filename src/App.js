@@ -39,6 +39,7 @@ function App() {
   const [sortedData, setSortedData] = React.useState([]);
   const [isGrid, setIsGrid] = useState(false);
   const [country, setCountry] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const classes = useStyles();
 
   const handleData = (data) => {
@@ -86,6 +87,10 @@ function App() {
     setCountry("");
   };
 
+  const handleLoading = (bool) => {
+    setIsLoading(bool);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -93,6 +98,8 @@ function App() {
         sortedData: sortedData,
         grid: isGrid,
         country: country,
+        loading: isLoading,
+        handleLoading: handleLoading,
         handleCurrentCountry: handleCurrentCountry,
         removeCountry: removeCountry,
         enableGrid: enableGrid,

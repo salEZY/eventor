@@ -5,6 +5,8 @@ export const AppContext = createContext({
   sortedData: [],
   grid: false,
   country: "",
+  loading: true,
+  handleLoading: () => {},
   handleCurrentCountry: () => {},
   removeCountry: () => {},
   enableGrid: () => {},

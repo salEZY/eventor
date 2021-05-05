@@ -40,6 +40,7 @@ const Countries = () => {
   const classes = useStyles();
 
   const handleChange = (e) => {
+    ctx.handleLoading(true);
     ctx.handleCurrentCountry(e.target.value);
     axios
       .get(
@@ -47,6 +48,7 @@ const Countries = () => {
       )
       .then((userData) => {
         ctx.handleData(userData.data.events);
+        ctx.handleLoading(false);
       });
   };
 

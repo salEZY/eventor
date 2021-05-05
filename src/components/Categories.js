@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FormGroup, FormControlLabel, Checkbox } from "@material-ui/core";
 import axios from "axios";
 import { AppContext } from "../util/app-context";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles({
   inputDiv: {
@@ -47,6 +48,7 @@ const Categories = () => {
   const classes = useStyles();
 
   React.useEffect(() => {
+    ctx.handleLoading(true);
     axios
       .get(
         `https://app.ticketmaster.eu/amplify/v2/categories?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us`
@@ -54,6 +56,7 @@ const Categories = () => {
       .then((data) => {
         setCategories(data.data.categories);
         ctx.handleData([]);
+        ctx.handleLoading(false);
       });
   }, [ctx.country]);
 
@@ -83,12 +86,13 @@ const Categories = () => {
           .then((data) => ctx.handleData(data.data.events));
       }
     } else {
-      setCheck(check.filter((id) => id !== value));
+      checkArray = check.filter((chk) => chk !== value);
+      setCheck(checkArray);
       if (check.length === 1) {
         ctx.removeData();
         return;
       }
-      checkArray = check.filter((chk) => chk !== value);
+
       axios
         .get(
           `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us&category_ids=${checkArray}&start=0&rows=20
@@ -103,7 +107,7 @@ const Categories = () => {
       <FormGroup className={classes.inputDiv}>
         <h3>Select Category</h3>
         {!ctx.country ? (
-          <p>Please select a country</p>
+          <CircularProgress style={{ color: "#304ffe", margin: "0 auto" }} />
         ) : (
           <>
             <h3>
