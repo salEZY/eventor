@@ -22,53 +22,35 @@ const Main = (cssClass) => {
 
   return (
     <main className={classes.main}>
-      {
-    ctx.data.length === 0 ? ( <
-        >
-        <
-        h3 className = "nothingSelected" >
-        Choose events from the menu on the left <
-        /h3> <
-        />
-    ) : ({
-        ctx.loading ? ( < CircularProgress style = {
-                {
-                    color: "#304ffe",
-                    margin: "0 auto"
-                }
-            }
-            />) : ( <
-            >
-            <
-            Sort / > {
-                ctx.data.map(dat => {
-                    return ( <
-                        ConcertCard key = {
-                            dat.id
-                        }
-                        imgSrc = {
-                            dat.images ? dat.images.standard.url : ""
-                        }
-                        name = {
-                            dat.name
-                        }
-                        domain = {
-                            dat.domain
-                        }
-                        location = {
-                            `${dat.venue.location.address.address}, ${dat.venue.location.address.city}`
-                        }
-                        date = {
-                            dat.event_date ? dat.event_date.value : "TTBA"
-                        }
-                        />
-                    );
-                })
-            } <
-            />
-        )
-    })
-}
+      {ctx.data.length === 0 ? (
+        <>
+          <h3 className="nothingSelected">
+            Choose events from the menu on the left{" "}
+          </h3>
+        </>
+      ) : (
+        <>
+          {ctx.loading ? (
+            <CircularProgress style={{ color: "#304ffe", margin: "0 auto" }} />
+          ) : (
+            <>
+              <Sort />
+              {ctx.data.map((dat) => {
+                return (
+                  <ConcertCard
+                    key={dat.id}
+                    imgSrc={dat.images ? dat.images.standard.url : ""}
+                    name={dat.name}
+                    domain={dat.domain}
+                    location={`${dat.venue.location.address.address}, ${dat.venue.location.address.city}`}
+                    date={dat.event_date ? dat.event_date.value : "TTBA"}
+                  />
+                );
+              })}{" "}
+            </>
+          )}
+        </>
+      )}
     </main>
   );
 };
