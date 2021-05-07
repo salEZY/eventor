@@ -2,10 +2,11 @@ import { createContext } from "react";
 
 export const AppContext = createContext({
   data: [],
-  sortedData: [],
   grid: false,
   country: "",
   loading: true,
+  categories: [],
+  handleCategories: () => {},
   handleLoading: () => {},
   handleCurrentCountry: () => {},
   removeCountry: () => {},
@@ -13,8 +14,4 @@ export const AppContext = createContext({
   enableList: () => {},
   handleData: () => {},
   removeData: () => {},
-  handleSortedData: () => {},
-  removeSortedData: () => {},
-  handleCategories: () => {},
-  removeCategories: () => {},
 });

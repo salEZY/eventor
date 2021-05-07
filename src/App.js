@@ -36,10 +36,10 @@ const useStyles = makeStyles({
 
 function App() {
   const [data, setData] = useState([]);
-  const [sortedData, setSortedData] = React.useState([]);
   const [isGrid, setIsGrid] = useState(false);
   const [country, setCountry] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = React.useState([]);
   const classes = useStyles();
 
   const handleData = (data) => {
@@ -50,32 +50,12 @@ function App() {
     setData([]);
   };
 
-  const handleCategories = (data) => {
-    setData((prevState) => prevState.concat(data));
-  };
-
-  const removeCategories = (data, id) => {
-    console.log(data);
-    const categoryToRemove = data.filter(
-      (item) => item.categories[0].id !== id
-    );
-    setData(categoryToRemove);
-  };
-
   const enableGrid = () => {
     setIsGrid(true);
   };
 
   const enableList = () => {
     setIsGrid(false);
-  };
-
-  const handleSortedData = (data) => {
-    setSortedData(data);
-  };
-
-  const removeSortedData = () => {
-    setSortedData([]);
   };
 
   const handleCurrentCountry = (country) => {
@@ -91,14 +71,19 @@ function App() {
     setIsLoading(bool);
   };
 
+  const handleCategories = (data) => {
+    setCategories(data);
+  };
+
   return (
     <AppContext.Provider
       value={{
         data: data,
-        sortedData: sortedData,
         grid: isGrid,
         country: country,
         loading: isLoading,
+        categories: categories,
+        handleCategories: handleCategories,
         handleLoading: handleLoading,
         handleCurrentCountry: handleCurrentCountry,
         removeCountry: removeCountry,
@@ -106,10 +91,6 @@ function App() {
         enableList: enableList,
         handleData: handleData,
         removeData: removeData,
-        handleSortedData: handleSortedData,
-        removeSortedData: removeSortedData,
-        handleCategories: handleCategories,
-        removeCategories: removeCategories,
       }}
     >
       <div className={classes.content}>

@@ -1,5 +1,4 @@
 import React from "react";
-
 import { makeStyles } from "@material-ui/core/styles";
 import { FormGroup, FormControlLabel, Checkbox } from "@material-ui/core";
 import axios from "axios";
@@ -13,7 +12,7 @@ const useStyles = makeStyles({
     color: "#304ffe",
     backgroundColor: "white",
     textAlign: "center",
-    padding: "1rem",
+    padding: "5px",
     margin: "0 auto",
     borderRadius: "5px",
   },
@@ -43,21 +42,23 @@ const useStyles = makeStyles({
 
 const Categories = () => {
   const ctx = React.useContext(AppContext);
-  const [categories, setCategories] = React.useState("");
+
   const [check, setCheck] = React.useState([]);
   const classes = useStyles();
 
   React.useEffect(() => {
     ctx.handleLoading(true);
-    axios
-      .get(
-        `https://app.ticketmaster.eu/amplify/v2/categories?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us`
-      )
-      .then((data) => {
-        setCategories(data.data.categories);
-        ctx.handleData([]);
-        ctx.handleLoading(false);
-      });
+    if (ctx.country !== "") {
+      axios
+        .get(
+          `https://app.ticketmaster.eu/amplify/v2/categories?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us`
+        )
+        .then((data) => {
+          ctx.handleCategories(data.data.categories);
+        });
+    }
+
+    ctx.handleLoading(false);
   }, [ctx.country]);
 
   const handleCategories = (event) => {
@@ -110,11 +111,11 @@ const Categories = () => {
           <CircularProgress style={{ color: "#304ffe", margin: "0 auto" }} />
         ) : (
           <>
-            <h3>
+            <h3 style={{ marginTop: "0" }}>
               {ctx.country.charAt(0).toUpperCase() + ctx.country.slice(1)}
             </h3>
             <div className={classes.lbl}>
-              {categories.map((category) => {
+              {ctx.categories.map((category) => {
                 return (
                   <FormControlLabel
                     control={

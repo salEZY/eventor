@@ -5,6 +5,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import { AppContext } from "../util/app-context";
+import axios from "axios";
 
 const useStyle = makeStyles({
   sortDiv: {
@@ -30,22 +31,15 @@ const Sort = () => {
   const classes = useStyle();
 
   const handleChange = (e) => {
-    console.log(e.target.value);
-    if (sortBy === "name") {
-      ctx.data.sort((a, b) => {
-        if (a > b) {
-          return -1;
-        }
-        if (b > a) {
-          return 1;
-        }
-        return 0;
+    ctx.handleLoading(true);
+    axios
+      .get(
+        `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us&sort_by=${e.target.value}&start=0&rows=12`
+      )
+      .then((userData) => {
+        ctx.handleData(userData.data.events);
+        ctx.handleLoading(false);
       });
-    } else if (sortBy === "popularity") {
-    } else if (sortBy === "date") {
-    } else {
-      ctx.removeSortedData();
-    }
   };
 
   return (
@@ -58,16 +52,16 @@ const Sort = () => {
           value={sortBy}
           onChange={handleChange}
         >
-          <MenuItem value="name">Name</MenuItem>
+          <MenuItem value="eventname">Name</MenuItem>
           <MenuItem value="popularity">Popularity</MenuItem>
-          <MenuItem value="date">Date</MenuItem>
+          <MenuItem value="eventdate">Date</MenuItem>
         </Select>
       </FormControl>
       <Button
         value="Clear"
         color="secondary"
         className={classes.clearBtn}
-        onClick={ctx.removeSortedData}
+        onClick={ctx.removeData}
       >
         Clear
       </Button>

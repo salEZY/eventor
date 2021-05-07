@@ -14,7 +14,7 @@ const useStyles = makeStyles({
     color: "#304ffe",
     backgroundColor: "white",
     textAlign: "center",
-    padding: "1rem",
+    padding: "5px",
     margin: "0 auto",
     borderRadius: "5px",
     display: "flex",
@@ -48,10 +48,11 @@ const Countries = () => {
       )
       .then((userData) => {
         ctx.handleData(userData.data.events);
-        ctx.handleLoading(false);
       });
+    ctx.handleLoading(false);
   };
-
+  console.log(ctx.country);
+  console.log(ctx.data);
   return (
     <FormControl component="fieldset" className={classes.radios}>
       <h3>Select Country</h3>
