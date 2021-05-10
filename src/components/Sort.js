@@ -32,6 +32,7 @@ const Sort = () => {
 
   const handleChange = (e) => {
     ctx.handleLoading(true);
+    setSortBy(e.target.value);
     axios
       .get(
         `https://app.ticketmaster.eu/amplify/v2/events?apikey=3emDiWvgsjWAX84KicT04Sibk9XAsX88&domain=${ctx.country}&lang=en-us&sort_by=${e.target.value}&start=0&rows=12`

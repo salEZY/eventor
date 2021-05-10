@@ -51,8 +51,7 @@ const Countries = () => {
       });
     ctx.handleLoading(false);
   };
-  console.log(ctx.country);
-  console.log(ctx.data);
+
   return (
     <FormControl component="fieldset" className={classes.radios}>
       <h3>Select Country</h3>

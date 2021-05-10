@@ -55,10 +55,9 @@ const Categories = () => {
         )
         .then((data) => {
           ctx.handleCategories(data.data.categories);
+          ctx.handleLoading(false);
         });
     }
-
-    ctx.handleLoading(false);
   }, [ctx.country]);
 
   const handleCategories = (event) => {
@@ -108,30 +107,36 @@ const Categories = () => {
       <FormGroup className={classes.inputDiv}>
         <h3>Select Category</h3>
         {!ctx.country ? (
-          <CircularProgress style={{ color: "#304ffe", margin: "0 auto" }} />
+          <h4>Please select a country first</h4>
         ) : (
           <>
             <h3 style={{ marginTop: "0" }}>
               {ctx.country.charAt(0).toUpperCase() + ctx.country.slice(1)}
             </h3>
             <div className={classes.lbl}>
-              {ctx.categories.map((category) => {
-                return (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name={category.name}
-                        value={category.id}
-                        color="primary"
-                        className={classes.inputs}
-                        onClick={(e) => handleCategories(e)}
-                      />
-                    }
-                    label={category.name}
-                    key={category.id}
-                  />
-                );
-              })}
+              {ctx.loading ? (
+                <CircularProgress
+                  style={{ color: "#304ffe", margin: "0 auto" }}
+                />
+              ) : (
+                ctx.categories.map((category) => {
+                  return (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name={category.name}
+                          value={category.id}
+                          color="primary"
+                          className={classes.inputs}
+                          onClick={(e) => handleCategories(e)}
+                        />
+                      }
+                      label={category.name}
+                      key={category.id}
+                    />
+                  );
+                })
+              )}
             </div>
           </>
         )}
